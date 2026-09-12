@@ -61,14 +61,6 @@ InstanceCreationExpression? findWidgetCreation(AstNode? node) {
   if (current is NamedType && current.parent is ConstructorName) {
     current = current.parent!.parent;
   }
-  // Cursor on an argument label such as `child:` or `floatingActionButton:`
-  // means the argument's widget, not the widget that owns the argument.
-  if (current is NamedArgument) {
-    final value = current.argumentExpression;
-    if (value is InstanceCreationExpression && isWidgetType(value.staticType)) {
-      return value;
-    }
-  }
   while (current != null) {
     if (current is InstanceCreationExpression &&
         isWidgetType(current.staticType)) {
@@ -146,18 +138,4 @@ ClassDeclaration? classDeclarationAtHeader(AstNode? node, int offset) {
     current = current.parent;
   }
   return null;
-}
-
-/// Whether the constructor used by [creation] declares a named parameter
-/// called [name]. Guards slot conversions so `child:` is never rewritten to
-/// `children:` on a widget that has no such parameter.
-bool constructorHasNamedParameter(
-  InstanceCreationExpression creation,
-  String name,
-) {
-  final constructor = creation.constructorName.element;
-  if (constructor == null) return false;
-  return constructor.formalParameters.any(
-    (parameter) => parameter.isNamed && parameter.name == name,
-  );
 }

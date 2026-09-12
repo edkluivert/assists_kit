@@ -1,10 +1,3 @@
-## 0.1.1
-
-- Convert to children: / child: are only offered when the widget's constructor
-  actually has that parameter.
-- With the cursor on an argument label (`child:`, `floatingActionButton:`),
-  assists target the argument's widget instead of the enclosing one.
-
 ## 0.1.0
 
 Initial release as `assists_kit` (previously published as `dartnative_assists`).

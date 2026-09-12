@@ -32,7 +32,6 @@ class ConvertChildToChildren extends ResolvedCorrectionProducer {
     if (creation == null) return;
     final child = childArgument(creation);
     if (child == null || childrenArgument(creation) != null) return;
-    if (!constructorHasNamedParameter(creation, 'children')) return;
     final value = utils.getNodeText(child.argumentExpression);
     await builder.addDartFileEdit(file, (builder) {
       builder.addSimpleReplacement(range.node(child), 'children: [$value]');
@@ -65,7 +64,6 @@ class ConvertChildrenToChild extends ResolvedCorrectionProducer {
     final list = childrenList(creation);
     if (children == null || list == null || list.elements.length != 1) return;
     if (childArgument(creation) != null) return;
-    if (!constructorHasNamedParameter(creation, 'child')) return;
     final only = list.elements.single;
     if (only is! Expression) return;
     final value = utils.getNodeText(only);

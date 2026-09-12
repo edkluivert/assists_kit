@@ -196,6 +196,13 @@ class Positioned extends Widget {
   });
 }
 
+/// Accepts both slots, for the child/children conversion tests.
+class Wrapper extends Widget {
+  final Widget? child;
+  final List<Widget>? children;
+  const Wrapper({super.key, this.child, this.children});
+}
+
 class Offstage extends Widget {
   final bool offstage;
   final Widget? child;

@@ -1,0 +1,1 @@
+2f618c374d9ae440649cf12d329900e8f82a5772a9c44e73e8c3ac523af2bf0e  assists_kit-0.1.0.tar.gz

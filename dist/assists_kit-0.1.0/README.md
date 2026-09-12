@@ -27,7 +27,7 @@ your project:
 plugins:
   assists_kit:
     hosted: https://dartpub.dev
-    version: ^0.1.1
+    version: ^0.1.0
 ```
 
 Restart the Dart Analysis Server once (Android Studio: Tools › Dart › Restart
@@ -85,7 +85,7 @@ Enable it under the plugin entry:
 plugins:
   assists_kit:
     hosted: https://dartpub.dev
-    version: ^0.1.1
+    version: ^0.1.0
     diagnostics:
       dartnative_offstage_loses_state: true
 ```

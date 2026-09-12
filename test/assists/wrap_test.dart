@@ -57,6 +57,30 @@ class Home extends StatelessWidget {
     expect(messages, contains('Wrap with Container'));
   }
 
+  Future<void> test_cursorOnAnArgumentLabelTargetsThatArgumentsWidget() async {
+    const code = '''
+class Home extends StatelessWidget {
+  const Home({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(child: Icon(CupertinoIcons.plus)),
+    );
+  }
+}
+''';
+    final out = await apply(code, 'floatingActionButton:', 'Wrap with Center');
+    expect(
+      out,
+      contains(
+        'floatingActionButton: Center(child: FloatingActionButton('
+        'child: Icon(CupertinoIcons.plus))),',
+      ),
+    );
+    expect(out, isNot(contains('Center(child: Scaffold(')));
+  }
+
   Future<void> test_nothingOnAClassHeader() async {
     final messages = await messagesAt(_screen, 'class Home');
     expect(messages, isNot(contains('Wrap with Container')));

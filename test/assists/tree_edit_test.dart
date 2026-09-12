@@ -98,11 +98,53 @@ class SwapTest extends AssistTest {
 @reflectiveTest
 class ChildChildrenTest extends AssistTest {
   Future<void> test_childToChildren() async {
-    final out = await apply(_nested, 'Center(', 'Convert to children:');
-    expect(out, contains('children: [Padding('));
+    const code = '''
+class Home extends StatelessWidget {
+  const Home({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrapper(child: Text('hi'));
+  }
+}
+''';
+    final out = await apply(code, 'Wrapper(', 'Convert to children:');
+    expect(out, contains("Wrapper(children: [Text('hi')])"));
   }
 
   Future<void> test_childrenToChild() async {
+    const code = '''
+class Home extends StatelessWidget {
+  const Home({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrapper(children: [Text('hi')]);
+  }
+}
+''';
+    final out = await apply(code, 'Wrapper(', 'Convert to child:');
+    expect(out, contains("Wrapper(child: Text('hi'))"));
+  }
+
+  Future<void> test_childToChildrenNeedsAChildrenParameter() async {
+    const code = '''
+class Home extends StatelessWidget {
+  const Home({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(child: Icon(CupertinoIcons.plus)),
+    );
+  }
+}
+''';
+    final messages = await messagesAt(code, 'FloatingActionButton(');
+    expect(messages, isNot(contains('Convert to children:')));
+  }
+
+  Future<void> test_childrenToChildNeedsAChildParameter() async {
     const code = '''
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -113,8 +155,9 @@ class Home extends StatelessWidget {
   }
 }
 ''';
-    final out = await apply(code, 'Column(', 'Convert to child:');
-    expect(out, contains("Column(child: Text('hi'))"));
+    // Column has no `child:` in the stub, so the conversion is not offered.
+    final messages = await messagesAt(code, 'Column(');
+    expect(messages, isNot(contains('Convert to child:')));
   }
 
   Future<void> test_childrenToChildNeedsExactlyOneElement() async {

@@ -7,7 +7,7 @@ project. `plugins` is a top-level key, not nested under `analyzer`.
 plugins:
   assists_kit:
     hosted: https://dartpub.dev
-    version: ^0.1.0
+    version: ^0.1.1
 ```
 
 Restart the Dart Analysis Server (Android Studio: Tools › Dart › Restart Dart
@@ -41,7 +41,7 @@ lint as well:
 plugins:
   assists_kit:
     hosted: https://dartpub.dev
-    version: ^0.1.0
+    version: ^0.1.1
     diagnostics:
       dartnative_offstage_loses_state: true
 ```

@@ -14,7 +14,7 @@
 /// plugins:
 ///   assists_kit:
 ///     hosted: https://dartpub.dev
-///     version: ^0.1.1
+///     version: ^0.1.0
 /// ```
 ///
 /// then restart the Dart Analysis Server in the IDE.
