@@ -1,0 +1,30 @@
+name: dartnative_assists
+description: >-
+  Analyzer plugin for DartNative apps: the wrap/remove/swap/convert widget
+  assists the analysis server only offers to Flutter, plus warnings for
+  DartNative behaviours that fail silently or crash at mount.
+version: 0.1.0
+repository: https://github.com/funkash/dartnative_assists
+topics:
+  - dartnative
+  - analyzer-plugin
+  - assists
+  - lints
+
+environment:
+  sdk: ^3.11.0
+
+dependencies:
+  # analyzer and analysis_server_plugin move in lockstep with the Dart SDK.
+  # Resolved against the DartNative Zero SDK (Dart 3.12.0-192.0.dev), 2026-09.
+  analysis_server_plugin: ^0.3.23
+  analyzer: ^14.4.0
+  analyzer_plugin: ^0.14.17
+
+  path: ^1.9.0
+
+dev_dependencies:
+  analyzer_testing: ^0.4.2
+  lints: ^6.0.0
+  test: ^1.32.0
+  test_reflective_loader: ^0.4.0

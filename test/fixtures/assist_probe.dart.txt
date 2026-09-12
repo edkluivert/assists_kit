@@ -1,0 +1,44 @@
+// Probe file for tool/try_assists.dart. It only resolves inside a DartNative
+// project (package:dartnative comes from the Zero SDK), so copy it into a
+// dn project's lib/ folder to run:
+//
+//   cp example/assist_probe.dart /path/to/app/lib/_assist_probe.dart
+//   dart run tool/try_assists.dart /path/to/app/lib/_assist_probe.dart --find 'class Greeting' --apply 0
+
+import 'package:dartnative/dartnative.dart';
+
+class Greeting extends StatelessWidget {
+  static const int kMax = 3;
+  final String name;
+  final int count;
+  const Greeting({super.key, required this.name, this.count = 0});
+
+  String get label => '$name ($count of $kMax)';
+
+  bool get isFull => count >= kMax;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Text(label, style: TextStyle(fontSize: isFull ? 24 : 20, color: Colors.blue.shade700)),
+      ),
+    );
+  }
+}
+
+class Plain extends StatefulWidget {
+  final String title;
+  const Plain({super.key, required this.title});
+
+  @override
+  State<Plain> createState() => _PlainState();
+}
+
+class _PlainState extends State<Plain> {
+  @override
+  Widget build(BuildContext context) {
+    return Text(widget.title);
+  }
+}

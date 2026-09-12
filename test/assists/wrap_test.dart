@@ -1,0 +1,168 @@
+// ignore_for_file: non_constant_identifier_names
+
+import 'package:test/test.dart';
+import 'package:test_reflective_loader/test_reflective_loader.dart';
+
+import '../support/test_bases.dart';
+
+void main() {
+  defineReflectiveSuite(() {
+    defineReflectiveTests(WrapTest);
+  });
+}
+
+@reflectiveTest
+class WrapTest extends AssistTest {
+  static const _screen = '''
+class Home extends StatelessWidget {
+  const Home({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text('hi'),
+    );
+  }
+}
+''';
+
+  Future<void> test_offersEveryWrapperOnAWidget() async {
+    final messages = await messagesAt(_screen, "Text('hi')");
+    expect(
+      messages,
+      containsAll([
+        'Wrap with Center',
+        'Wrap with Container',
+        'Wrap with Padding',
+        'Wrap with SizedBox',
+        'Wrap with Expanded',
+        'Wrap with Flexible',
+        'Wrap with SafeArea',
+        'Wrap with GestureDetector',
+        'Wrap with GlassEffectContainer',
+        'Wrap with Column',
+        'Wrap with Row',
+        'Wrap with Stack',
+        'Wrap with Builder',
+        'Wrap with FutureBuilder',
+        'Wrap with StreamBuilder',
+        'Wrap with ValueListenableBuilder',
+        'Wrap with widget...',
+      ]),
+    );
+  }
+
+  Future<void> test_cursorOnConstructorNameCountsAsOnTheWidget() async {
+    final messages = await messagesAt(_screen, 'Text');
+    expect(messages, contains('Wrap with Container'));
+  }
+
+  Future<void> test_nothingOnAClassHeader() async {
+    final messages = await messagesAt(_screen, 'class Home');
+    expect(messages, isNot(contains('Wrap with Container')));
+  }
+
+  Future<void> test_nothingInsideACallbackBody() async {
+    const code = '''
+class Home extends StatelessWidget {
+  const Home({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        final x = 1;
+      },
+      child: Text('hi'),
+    );
+  }
+}
+''';
+    final messages = await messagesAt(code, 'final x');
+    expect(messages.where((m) => m.startsWith('Wrap with')), isEmpty);
+  }
+
+  Future<void> test_wrapWithContainerIsSingleLine() async {
+    final out = await apply(_screen, "Text('hi')", 'Wrap with Container');
+    expect(out, contains("child: Container(child: Text('hi')),"));
+  }
+
+  Future<void> test_wrapWithPaddingAddsDefaultInsets() async {
+    final out = await apply(_screen, "Text('hi')", 'Wrap with Padding');
+    expect(
+      out,
+      contains(
+        "Padding(padding: const EdgeInsets.all(8.0), child: Text('hi'))",
+      ),
+    );
+  }
+
+  Future<void> test_wrapWithColumnIsMultiLineAtTheRightIndent() async {
+    final out = await apply(_screen, "Text('hi')", 'Wrap with Column');
+    expect(
+      out,
+      contains('''
+    return Center(
+      child: Column(
+        children: [
+          Text('hi'),
+        ],
+      ),
+    );
+'''),
+    );
+  }
+
+  Future<void> test_wrapWithColumnReindentsMultiLineChild() async {
+    const code = '''
+class Home extends StatelessWidget {
+  const Home({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Text(
+        'hi',
+        style: TextStyle(fontSize: 12),
+      ),
+    );
+  }
+}
+''';
+    final out = await apply(code, "Text(", 'Wrap with Row');
+    expect(
+      out,
+      contains('''
+      child: Row(
+        children: [
+          Text(
+            'hi',
+            style: TextStyle(fontSize: 12),
+          ),
+        ],
+      ),
+'''),
+    );
+  }
+
+  Future<void> test_wrapWithBuilder() async {
+    final out = await apply(_screen, "Text('hi')", 'Wrap with Builder');
+    expect(out, contains("Builder(builder: (context) => Text('hi'))"));
+  }
+
+  Future<void> test_wrapWithFutureBuilder() async {
+    final out = await apply(_screen, "Text('hi')", 'Wrap with FutureBuilder');
+    expect(
+      out,
+      contains(
+        "FutureBuilder(future: future, builder: (context, snapshot) => "
+        "Text('hi'))",
+      ),
+    );
+  }
+
+  Future<void> test_wrapWithWidgetUsesAPlaceholderName() async {
+    final out = await apply(_screen, "Text('hi')", 'Wrap with widget...');
+    expect(out, contains("widget(child: Text('hi'))"));
+  }
+}
