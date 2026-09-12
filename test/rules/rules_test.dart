@@ -38,6 +38,19 @@ Widget build() => Scaffold(
 
   Future<void> test_quietWithoutTheSlot() =>
       assertClean("Widget build() => Scaffold(body: Text('x'));");
+
+  Future<void> test_quietWhenGatedOnPlatform() => assertClean('''
+// Stands in for dart:io, whose members the test SDK marks deprecated.
+class Platform {
+  static bool get isAndroid => true;
+}
+
+Widget build() => Scaffold(
+  floatingActionButton: Platform.isAndroid
+      ? FloatingActionButton(child: Icon(CupertinoIcons.plus))
+      : null,
+);
+''');
 }
 
 @reflectiveTest

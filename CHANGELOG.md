@@ -1,5 +1,7 @@
 ## 0.1.1
 
+- `dartnative_fab_slot_android_only` stays quiet when the argument is gated on
+  `Platform.isAndroid`, `Platform.isIOS` or `isIOS26`.
 - Wrap assists accept any expression of a widget type, not only constructor
   calls, and a selection across several `children:` siblings wraps them
   together in one Column, Row or Stack, as in Flutter.

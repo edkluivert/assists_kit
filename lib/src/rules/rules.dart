@@ -17,11 +17,11 @@ import 'rule_support.dart';
 class FabSlotAndroidOnly extends AnalysisRule {
   static final LintCode code = warning(
     'dartnative_fab_slot_android_only',
-    "'Scaffold.floatingActionButton' renders on Android only; iOS shows "
-        'nothing.',
+    "'Scaffold.floatingActionButton' renders on Android only; on iOS the "
+        'button does not appear.',
     correction:
-        'Put the FloatingActionButton in a Stack inside the body, or '
-        'gate this argument behind Platform.isAndroid.',
+        'Gate it as Platform.isAndroid ? fab : null and give iOS its own '
+        'placement, or put the button in a Stack inside the body.',
   );
 
   FabSlotAndroidOnly()
@@ -50,7 +50,19 @@ class _FabVisitor extends CreationVisitor {
   @override
   void check(InstanceCreationExpression node) {
     final argument = namedArgument(node, 'floatingActionButton');
-    if (argument != null) rule.reportAtNode(argument);
+    if (argument == null) return;
+    // `Platform.isAndroid ? fab : null` shows the author has handled iOS
+    // deliberately; that is the recommended pattern, so stay quiet.
+    if (_isPlatformGated(argument.argumentExpression)) return;
+    rule.reportAtNode(argument);
+  }
+
+  static bool _isPlatformGated(Expression expression) {
+    if (expression is! ConditionalExpression) return false;
+    final condition = expression.condition.toSource();
+    return condition.contains('Platform.isAndroid') ||
+        condition.contains('Platform.isIOS') ||
+        condition.contains('isIOS26');
   }
 }
 
