@@ -4,7 +4,7 @@ description: >-
   assists the analysis server only offers to Flutter, plus warnings for
   DartNative behaviours that fail silently or crash at mount.
 version: 0.1.0
-repository: https://github.com/funkash/dartnative_assists
+repository: https://github.com/edkluivert/dartnative_assists
 topics:
   - dartnative
   - analyzer-plugin
