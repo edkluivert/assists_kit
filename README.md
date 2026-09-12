@@ -22,7 +22,7 @@ In the `analysis_options.yaml` at the root of your project:
 
 ```yaml
 plugins:
-  dartnative_assists: ^0.1.0
+  dartnative_assists: ^0.1.1
 ```
 
 Restart the Dart Analysis Server once (Android Studio: Tools › Dart › Restart
@@ -79,7 +79,7 @@ Enable it under the plugin entry:
 ```yaml
 plugins:
   dartnative_assists:
-    version: ^0.1.0
+    version: ^0.1.1
     diagnostics:
       dartnative_offstage_loses_state: true
 ```

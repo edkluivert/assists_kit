@@ -12,7 +12,7 @@
 ///
 /// ```yaml
 /// plugins:
-///   dartnative_assists: ^0.1.0
+///   dartnative_assists: ^0.1.1
 /// ```
 ///
 /// then restart the Dart Analysis Server in the IDE.

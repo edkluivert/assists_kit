@@ -1,9 +1,8 @@
 name: dartnative_assists
 description: >-
-  Analyzer plugin for DartNative apps: the wrap/remove/swap/convert widget
-  assists the analysis server only offers to Flutter, plus warnings for
-  DartNative behaviours that fail silently or crash at mount.
-version: 0.1.0
+  Analyzer plugin for DartNative: the Flutter-style wrap, remove, swap and
+  convert widget assists, plus warnings for behaviours that fail silently.
+version: 0.1.1
 repository: https://github.com/edkluivert/dartnative_assists
 topics:
   - dartnative

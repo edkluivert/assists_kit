@@ -5,7 +5,7 @@ project. `plugins` is a top-level key, not nested under `analyzer`.
 
 ```yaml
 plugins:
-  dartnative_assists: ^0.1.0
+  dartnative_assists: ^0.1.1
 ```
 
 Restart the Dart Analysis Server (Android Studio: Tools › Dart › Restart Dart
@@ -38,7 +38,7 @@ lint as well:
 ```yaml
 plugins:
   dartnative_assists:
-    version: ^0.1.0
+    version: ^0.1.1
     diagnostics:
       dartnative_offstage_loses_state: true
 ```
