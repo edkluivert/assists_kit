@@ -67,11 +67,23 @@ abstract class AssistTest extends AnalysisRuleTest {
   }
 
   /// All assists offered with the cursor at the first occurrence of
-  /// [marker] in [code] (import line prepended).
-  Future<List<Assist>> assistsAt(String code, String marker) async {
+  /// [marker] in [code] (import line prepended). With [through], the
+  /// selection extends from [marker] to the end of the first [through]
+  /// found after it.
+  Future<List<Assist>> assistsAt(
+    String code,
+    String marker, {
+    String? through,
+  }) async {
     final source = _import + code;
     final offset = source.indexOf(marker);
     expect(offset, greaterThanOrEqualTo(0), reason: 'marker not found');
+    var length = 0;
+    if (through != null) {
+      final end = source.indexOf(through, offset);
+      expect(end, greaterThanOrEqualTo(0), reason: 'through not found');
+      length = end + through.length - offset;
+    }
     newFile(testFilePath, source);
     final unit = await resolveFile(testFilePath);
     final library =
@@ -83,7 +95,7 @@ abstract class AssistTest extends AnalysisRuleTest {
       library,
       unit,
       offset,
-      0,
+      length,
     );
     return computeAssists(context);
   }
@@ -95,8 +107,13 @@ abstract class AssistTest extends AnalysisRuleTest {
 
   /// Applies the assist titled [message] at [marker] and returns the code
   /// after the edit, without the import line.
-  Future<String> apply(String code, String marker, String message) async {
-    final assists = await assistsAt(code, marker);
+  Future<String> apply(
+    String code,
+    String marker,
+    String message, {
+    String? through,
+  }) async {
+    final assists = await assistsAt(code, marker, through: through);
     final matches = assists.where((a) => a.kind.message == message).toList();
     expect(matches, hasLength(1), reason: 'assist "$message" not offered');
     var edited = _import + code;

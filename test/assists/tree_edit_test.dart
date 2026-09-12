@@ -59,6 +59,21 @@ class Home extends StatelessWidget {
     expect(out, contains("return Text('hi');"));
   }
 
+  Future<void> test_keepsConstWhenRemovingAConstWrapper() async {
+    const code = '''
+class Home extends StatelessWidget {
+  const Home({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(child: Text('hi'));
+  }
+}
+''';
+    final out = await apply(code, 'Center(', 'Remove this widget');
+    expect(out, contains("return const Text('hi');"));
+  }
+
   Future<void> test_notOfferedOnALeaf() async {
     final messages = await messagesAt(_nested, "Text('hi')");
     expect(messages, isNot(contains('Remove this widget')));

@@ -189,4 +189,169 @@ class Home extends StatelessWidget {
     final out = await apply(_screen, "Text('hi')", 'Wrap with widget...');
     expect(out, contains("widget(child: Text('hi'))"));
   }
+
+  static const _constScreen = '''
+class Home extends StatelessWidget {
+  const Home({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text('hi'),
+    );
+  }
+}
+''';
+
+  Future<void> test_explicitConstStaysOnTheInnerWidget() async {
+    const code = '''
+class Home extends StatelessWidget {
+  const Home({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: const Text('hi'),
+    );
+  }
+}
+''';
+    final out = await apply(code, "Text('hi')", 'Wrap with Container');
+    expect(out, contains("child: Container(child: const Text('hi')),"));
+  }
+
+  Future<void> test_paddingOmitsConstInsideAConstContext() async {
+    final out = await apply(_constScreen, "Text('hi')", 'Wrap with Padding');
+    expect(
+      out,
+      contains(
+        "child: Padding(padding: EdgeInsets.all(8.0), child: Text('hi')),",
+      ),
+    );
+    expect(out, contains('return const Center('));
+  }
+
+  Future<void> test_builderInsideAConstContextDropsTheEnclosingConst() async {
+    final out = await apply(_constScreen, "Text('hi')", 'Wrap with Builder');
+    expect(out, contains('return Center('));
+    expect(
+      out,
+      contains("child: Builder(builder: (context) => const Text('hi')),"),
+    );
+  }
+
+  Future<void> test_builderInsideAConstListDropsTheListConst() async {
+    const code = '''
+class Home extends StatelessWidget {
+  const Home({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: const [Text('a'), Text('b')]);
+  }
+}
+''';
+    final out = await apply(code, "Text('a')", 'Wrap with Builder');
+    expect(
+      out,
+      contains(
+        "Column(children: [Builder(builder: (context) => const Text('a')), "
+        "Text('b')]);",
+      ),
+    );
+  }
+
+  Future<void> test_builderNotOfferedWhenConstCannotBeDropped() async {
+    const code = '''
+const kLabel = Text('hi');
+''';
+    final messages = await messagesAt(code, "Text('hi')");
+    expect(messages, isNot(contains('Wrap with Builder')));
+    expect(messages, contains('Wrap with Container'));
+  }
+
+  Future<void> test_multiLineChildIsLaidOutOnItsOwnLines() async {
+    const code = '''
+class Home extends StatelessWidget {
+  const Home({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        'hi',
+        style: TextStyle(fontSize: 12),
+      ),
+    );
+  }
+}
+''';
+    final out = await apply(code, 'Text(', 'Wrap with Container');
+    expect(
+      out,
+      contains('''
+      child: Container(
+        child: Text(
+          'hi',
+          style: TextStyle(fontSize: 12),
+        ),
+      ),
+'''),
+    );
+  }
+
+  Future<void> test_wrapsAWidgetTypedParameterNotJustCreations() async {
+    const code = '''
+class Box extends StatelessWidget {
+  final Widget child;
+  const Box({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: child);
+  }
+}
+''';
+    final out = await apply(code, 'child);', 'Wrap with Container');
+    expect(out, contains('return Center(child: Container(child: child));'));
+  }
+
+  Future<void> test_selectionAcrossSiblingsWrapsThemTogether() async {
+    const code = '''
+class Home extends StatelessWidget {
+  const Home({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text('a'),
+        Text('b'),
+        Text('c'),
+      ],
+    );
+  }
+}
+''';
+    final out = await apply(
+      code,
+      "Text('a')",
+      'Wrap with Row',
+      through: "Text('b')",
+    );
+    expect(
+      out,
+      contains('''
+      children: [
+        Row(
+          children: [
+            Text('a'),
+            Text('b'),
+          ],
+        ),
+        Text('c'),
+      ],
+'''),
+    );
+  }
 }

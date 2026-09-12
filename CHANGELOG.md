@@ -1,5 +1,14 @@
 ## 0.1.1
 
+- Wrap assists accept any expression of a widget type, not only constructor
+  calls, and a selection across several `children:` siblings wraps them
+  together in one Column, Row or Stack, as in Flutter.
+- `const` handling matches the Flutter assists: an explicit `const` stays on
+  the wrapped widget, `EdgeInsets` gets no redundant `const` inside a const
+  context, and a multi-line child is laid out on its own lines. Beyond
+  Flutter: wrapping with Builder or an async builder inside a const context
+  drops the enclosing `const` instead of producing invalid code, and removing
+  a `const` wrapper keeps its child `const`.
 - Convert to children: / child: are only offered when the widget's constructor
   actually has that parameter.
 - With the cursor on an argument label (`child:`, `floatingActionButton:`),

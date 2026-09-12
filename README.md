@@ -38,14 +38,14 @@ Requires Dart 3.11 or later; the DartNative `dn` toolchain ships a newer SDK.
 
 ## Assists
 
-With the cursor on a widget creation (the type name or anywhere in its
-arguments):
+With the cursor on a widget (a constructor call, or any expression of a
+widget type such as a `child` parameter):
 
 | Assist | Result |
 |---|---|
 | Wrap with Center / Container / SizedBox / Expanded / Flexible / SafeArea / GestureDetector / GlassEffectContainer | `Name(child: …)` |
 | Wrap with Padding | `Padding(padding: const EdgeInsets.all(8.0), child: …)` |
-| Wrap with Column / Row / Stack | multi-line `children: [ … ]` |
+| Wrap with Column / Row / Stack | multi-line `children: [ … ]`; with a selection spanning several siblings in a `children:` list, wraps them together |
 | Wrap with Builder | `Builder(builder: (context) => …)` |
 | Wrap with FutureBuilder / StreamBuilder / ValueListenableBuilder | `…builder: (context, snapshot) => …` |
 | Wrap with widget… | a wrapper name you type |

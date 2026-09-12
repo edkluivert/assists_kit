@@ -1,3 +1,6 @@
 .dart_tool/
 pubspec.lock
 build/
+dist/
+.idea/
+*.iml

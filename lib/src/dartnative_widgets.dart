@@ -47,13 +47,16 @@ bool isDartNativeCreation(InstanceCreationExpression creation, String name) =>
 bool isStateElement(InterfaceElement? element) =>
     isDartNativeClass(element, 'State');
 
-/// Finds the widget creation expression the cursor is "on".
+/// Finds the widget expression the cursor is "on".
 ///
 /// Walks up from [node]: a cursor on the constructor name (`Text` in
 /// `Text('hi')`) or anywhere inside the argument list resolves to that
-/// creation; the walk stops at function bodies so a cursor inside an
-/// `onPressed` closure does not pick up the enclosing button.
-InstanceCreationExpression? findWidgetCreation(AstNode? node) {
+/// creation, a cursor on an argument label resolves to the argument's
+/// widget, and any expression of a widget type (a `child` parameter, a
+/// `buildRow()` call) qualifies, as in the Flutter assists. The walk stops
+/// at function bodies so a cursor inside an `onPressed` closure does not
+/// pick up the enclosing button.
+Expression? findWidgetExpression(AstNode? node) {
   var current = node;
   if (current is SimpleIdentifier && current.parent is NamedType) {
     current = current.parent;
@@ -61,17 +64,12 @@ InstanceCreationExpression? findWidgetCreation(AstNode? node) {
   if (current is NamedType && current.parent is ConstructorName) {
     current = current.parent!.parent;
   }
-  // Cursor on an argument label such as `child:` or `floatingActionButton:`
-  // means the argument's widget, not the widget that owns the argument.
   if (current is NamedArgument) {
     final value = current.argumentExpression;
-    if (value is InstanceCreationExpression && isWidgetType(value.staticType)) {
-      return value;
-    }
+    if (isWidgetType(value.staticType)) return value;
   }
   while (current != null) {
-    if (current is InstanceCreationExpression &&
-        isWidgetType(current.staticType)) {
+    if (current is Expression && isWidgetType(current.staticType)) {
       return current;
     }
     if (current is FunctionBody ||
@@ -83,6 +81,13 @@ InstanceCreationExpression? findWidgetCreation(AstNode? node) {
     current = current.parent;
   }
   return null;
+}
+
+/// [findWidgetExpression] narrowed to constructor calls, for assists that
+/// need to look at arguments.
+InstanceCreationExpression? findWidgetCreation(AstNode? node) {
+  final expression = findWidgetExpression(node);
+  return expression is InstanceCreationExpression ? expression : null;
 }
 
 /// The named argument called [name] of [creation], if present.

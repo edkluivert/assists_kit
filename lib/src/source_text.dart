@@ -59,3 +59,15 @@ String lineIndent(String content, int offset) {
   }
   return content.substring(lineStart, end);
 }
+
+/// [source] with [extra] prepended to every line after the first, so a
+/// multi-line expression can be moved deeper into a tree. Blank lines are
+/// left alone.
+String reindentContinuationLines(String source, String extra) {
+  final lines = source.split('\n');
+  return [
+    lines.first,
+    for (final line in lines.skip(1))
+      line.trim().isEmpty ? line : '$extra$line',
+  ].join('\n');
+}
