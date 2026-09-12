@@ -1,4 +1,4 @@
-/// dartnative_assists: analysis-server plugin entry point.
+/// assists_kit: analysis-server plugin entry point.
 ///
 /// The Dart analysis server ships "Wrap with Container", "Convert to
 /// StatefulWidget" and friends, but gates every one of them on the widget
@@ -12,7 +12,9 @@
 ///
 /// ```yaml
 /// plugins:
-///   dartnative_assists: ^0.1.1
+///   assists_kit:
+///     hosted: https://dartpub.dev
+///     version: ^0.1.0
 /// ```
 ///
 /// then restart the Dart Analysis Server in the IDE.
@@ -31,11 +33,11 @@ import 'src/rules/rules.dart';
 import 'src/swap_with_child.dart';
 import 'src/wrap_with.dart';
 
-final plugin = DartNativeAssistsPlugin();
+final plugin = AssistsKitPlugin();
 
-class DartNativeAssistsPlugin extends Plugin {
+class AssistsKitPlugin extends Plugin {
   @override
-  String get name => 'DartNative assists';
+  String get name => 'Assists Kit';
 
   @override
   void register(PluginRegistry registry) {

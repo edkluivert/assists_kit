@@ -1,11 +1,13 @@
-# Using dartnative_assists
+# Using assists_kit
 
 Add the plugin to the `analysis_options.yaml` at the root of your DartNative
 project. `plugins` is a top-level key, not nested under `analyzer`.
 
 ```yaml
 plugins:
-  dartnative_assists: ^0.1.1
+  assists_kit:
+    hosted: https://dartpub.dev
+    version: ^0.1.0
 ```
 
 Restart the Dart Analysis Server (Android Studio: Tools › Dart › Restart Dart
@@ -37,8 +39,9 @@ lint as well:
 
 ```yaml
 plugins:
-  dartnative_assists:
-    version: ^0.1.1
+  assists_kit:
+    hosted: https://dartpub.dev
+    version: ^0.1.0
     diagnostics:
       dartnative_offstage_loses_state: true
 ```

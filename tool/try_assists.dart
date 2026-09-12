@@ -19,7 +19,7 @@ import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/file_system/physical_file_system.dart';
 import 'package:analyzer/instrumentation/service.dart';
 import 'package:analyzer_plugin/protocol/protocol_common.dart';
-import 'package:dartnative_assists/main.dart' as dn;
+import 'package:assists_kit/main.dart' as dn;
 import 'package:path/path.dart' as p;
 
 Future<void> main(List<String> args) async {

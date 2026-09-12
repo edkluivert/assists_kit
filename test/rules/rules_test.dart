@@ -1,6 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:dartnative_assists/src/rules/rules.dart';
+import 'package:assists_kit/src/rules/rules.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
 import '../support/test_bases.dart';

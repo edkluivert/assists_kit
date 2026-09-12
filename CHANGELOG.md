@@ -1,10 +1,6 @@
-## 0.1.1
-
-- Shorter package description for pub.dev.
-
 ## 0.1.0
 
-Initial release.
+Initial release as `assists_kit` (previously published as `dartnative_assists`).
 
 Assists on a DartNative widget creation:
 

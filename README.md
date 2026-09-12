@@ -1,4 +1,4 @@
-# dartnative_assists
+# assists_kit
 
 Option+Enter widget assists and DartNative-specific warnings for
 [DartNative](https://dartnative.com) projects. Runs inside the Dart Analysis
@@ -18,11 +18,16 @@ device.
 
 ## Setup
 
-In the `analysis_options.yaml` at the root of your project:
+The package is published on dartpub.dev, DartNative's registry. The analysis
+server resolves plugins with plain `dart pub`, which only knows pub.dev, so
+the `hosted` line is required. In the `analysis_options.yaml` at the root of
+your project:
 
 ```yaml
 plugins:
-  dartnative_assists: ^0.1.1
+  assists_kit:
+    hosted: https://dartpub.dev
+    version: ^0.1.0
 ```
 
 Restart the Dart Analysis Server once (Android Studio: Tools › Dart › Restart
@@ -78,13 +83,14 @@ Enable it under the plugin entry:
 
 ```yaml
 plugins:
-  dartnative_assists:
-    version: ^0.1.1
+  assists_kit:
+    hosted: https://dartpub.dev
+    version: ^0.1.0
     diagnostics:
       dartnative_offstage_loses_state: true
 ```
 
-Suppress any rule on a line with `// ignore: dartnative_assists/<rule>`.
+Suppress any rule on a line with `// ignore: assists_kit/<rule>`.
 
 ## Development
 

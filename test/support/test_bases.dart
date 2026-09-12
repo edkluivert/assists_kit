@@ -21,7 +21,7 @@ import 'package:analyzer/error/error.dart';
 import 'package:analyzer/instrumentation/service.dart';
 import 'package:analyzer_plugin/protocol/protocol_common.dart';
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
-import 'package:dartnative_assists/main.dart';
+import 'package:assists_kit/main.dart';
 import 'package:test/test.dart';
 
 import 'dartnative_stub.dart';
