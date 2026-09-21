@@ -11,7 +11,10 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
 
 import '../dartnative_widgets.dart';
+import 'bloc_rules.dart';
 import 'rule_support.dart';
+
+export 'bloc_rules.dart';
 
 /// `Scaffold.floatingActionButton` renders on Android only.
 class FabSlotAndroidOnly extends AnalysisRule {
@@ -158,49 +161,6 @@ class _BorderVisitor extends CreationVisitor {
     ];
     if (given.isEmpty || given.length == _sides.length) return;
     rule.reportAtNode(node.constructorName);
-  }
-}
-
-/// A `TextField` with a controller needs `onChanged` to mirror input back.
-class MirrorTextController extends AnalysisRule {
-  static final LintCode code = warning(
-    'dartnative_mirror_text_controller',
-    "'TextEditingController' is one-way in DartNative; typed text never "
-        "reaches 'controller.text' without an 'onChanged' mirror.",
-    correction: "Add 'onChanged: (value) => controller.text = value'.",
-  );
-
-  MirrorTextController()
-    : super(
-        name: 'dartnative_mirror_text_controller',
-        description:
-            'A TextField with a controller but no onChanged leaves the '
-            'controller stale, so clear() and text= can no-op.',
-      );
-
-  @override
-  DiagnosticCode get diagnosticCode => code;
-
-  @override
-  void registerNodeProcessors(
-    RuleVisitorRegistry registry,
-    RuleContext context,
-  ) {
-    registry.addInstanceCreationExpression(
-      this,
-      _TextFieldVisitor(this, context),
-    );
-  }
-}
-
-class _TextFieldVisitor extends CreationVisitor {
-  _TextFieldVisitor(super.rule, super.context) : super(className: 'TextField');
-
-  @override
-  void check(InstanceCreationExpression node) {
-    final controller = namedArgument(node, 'controller');
-    if (controller == null || namedArgument(node, 'onChanged') != null) return;
-    rule.reportAtNode(controller);
   }
 }
 
@@ -404,11 +364,15 @@ List<AnalysisRule> get warningRules => [
   FabSlotAndroidOnly(),
   MenuActionMustBeAlone(),
   UniformBorderOnly(),
-  MirrorTextController(),
   CustomPaintFiniteSize(),
   PositionedMustBeOutermost(),
   SnackBarActionNotWired(),
+  FlutterblocWatchOutsideBuild(),
+  FlutterblocReadStateInBuild(),
 ];
 
 /// Rules that must be enabled in analysis_options.yaml.
-List<AnalysisRule> get lintRules => [OffstageLosesState()];
+List<AnalysisRule> get lintRules => [
+  OffstageLosesState(),
+  FlutterblocReadInBuild(),
+];

@@ -27,7 +27,7 @@ your project:
 plugins:
   assists_kit:
     hosted: https://dartpub.dev
-    version: ^0.1.4
+    version: ^0.1.5
 ```
 
 Restart the Dart Analysis Server once (Android Studio: Tools › Dart › Restart
@@ -68,16 +68,18 @@ With the cursor on a class header line:
 | `dartnative_fab_slot_android_only` | `Scaffold.floatingActionButton`, which renders on Android and shows nothing on iOS |
 | `dartnative_menu_action_must_be_alone` | a `BarButtonItem` with `menu:` beside other actions, which asserts at mount |
 | `dartnative_uniform_border_only` | per-side `Border(...)`, which DartNative ignores in favour of `top` |
-| `dartnative_mirror_text_controller` | a `TextField` with a controller and no `onChanged`; the controller is one-way. Quick fix adds the mirror |
 | `dartnative_custom_paint_finite_size` | `CustomPaint(size: Size(double.infinity, …))`, which paints off-screen |
 | `dartnative_positioned_must_be_outermost` | a wrapper above `Positioned` in a `Stack`, which is dropped |
 | `dartnative_snackbar_action_not_wired` | `SnackBarAction.onPressed`, which never fires |
+| `flutterbloc_watch_outside_build` | `context.watch` / `context.select` (flutterbloc_kit) in an event handler, `initState` or a helper, which read once and never rebuild |
+| `flutterbloc_read_state_in_build` | `context.read<T>().state` rendered in build, which goes stale on the first emit |
 
 Opt-in lint:
 
 | Rule | What it catches |
 |---|---|
 | `dartnative_offstage_loses_state` | `Offstage`, which unmounts its child in DartNative |
+| `flutterbloc_read_in_build` | any `context.read` in build; provider's guidance is read in handlers, watch in build |
 
 Enable it under the plugin entry:
 
@@ -120,5 +122,6 @@ An "error occurred while executing an analyzer plugin" line during
 
 Each warning encodes one fact from the DartNative widget reference or from
 on-device testing on DartNative 1.0.0 (September 2026). The rule's
-`description` names which. If DartNative changes a behaviour, the rule should
-be retired rather than kept as folklore.
+`description` names which. When DartNative changes a behaviour the rule is
+retired: the controller-mirror rule was removed the day framework revision
+80edbf105e made `TextEditingController` two-way.

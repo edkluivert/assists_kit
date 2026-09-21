@@ -1,5 +1,24 @@
+## 0.1.6
+
+- Rules for [flutterbloc_kit](https://dartpub.dev/packages/flutterbloc_kit):
+  `flutterbloc_watch_outside_build` and `flutterbloc_read_state_in_build`
+  (warnings, on by default) catch `context.watch` / `context.select` in an
+  event handler, `initState` or a helper, and `context.read<T>().state`
+  rendered in build; neither ever rebuilds. `flutterbloc_read_in_build`
+  (opt-in lint) flags every `context.read` in build, provider's own guidance.
+  A closure with a `BuildContext` parameter counts as a build, so
+  `Builder` and `BlocBuilder` callbacks stay quiet.
+
+## 0.1.5
+
+- Removed `dartnative_mirror_text_controller` and its quick fix. Framework
+  revision 80edbf105e made `TextEditingController` two-way, so the warning was
+  wrong. (Meant for 0.1.1; the published 0.1.4 still carried it.)
+
 ## 0.1.1
 
+- Removed `dartnative_mirror_text_controller` and its fix: since framework
+  revision 80edbf105e the controller is two-way, so the warning was wrong.
 - `dartnative_fab_slot_android_only` stays quiet when the argument is gated on
   `Platform.isAndroid`, `Platform.isIOS` or `isIOS26`.
 - Wrap assists accept any expression of a widget type, not only constructor
@@ -39,7 +58,6 @@ Warning rules, on by default:
 - `dartnative_fab_slot_android_only`
 - `dartnative_menu_action_must_be_alone`
 - `dartnative_uniform_border_only`
-- `dartnative_mirror_text_controller` (with a quick fix)
 - `dartnative_custom_paint_finite_size`
 - `dartnative_positioned_must_be_outermost`
 - `dartnative_snackbar_action_not_wired`

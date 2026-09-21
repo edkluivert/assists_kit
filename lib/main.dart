@@ -28,7 +28,6 @@ import 'src/convert_to_stateful.dart';
 import 'src/convert_to_stateless.dart';
 import 'src/move_widget.dart';
 import 'src/remove_widget.dart';
-import 'src/rules/add_controller_mirror.dart';
 import 'src/rules/rules.dart';
 import 'src/swap_with_child.dart';
 import 'src/wrap_with.dart';
@@ -63,7 +62,7 @@ class AssistsKitPlugin extends Plugin {
     registry.registerAssist(ConvertToStatelessWidget.new);
   }
 
-  /// Registers the warning rules, the opt-in lint rules, and their fixes.
+  /// Registers the warning rules and the opt-in lint rules.
   void registerRules(PluginRegistry registry) {
     for (final rule in warningRules) {
       registry.registerWarningRule(rule);
@@ -71,9 +70,5 @@ class AssistsKitPlugin extends Plugin {
     for (final rule in lintRules) {
       registry.registerLintRule(rule);
     }
-    registry.registerFixForRule(
-      MirrorTextController.code,
-      AddControllerMirror.new,
-    );
   }
 }

@@ -10,7 +10,6 @@ void main() {
     defineReflectiveTests(FabSlotAndroidOnlyTest);
     defineReflectiveTests(MenuActionMustBeAloneTest);
     defineReflectiveTests(UniformBorderOnlyTest);
-    defineReflectiveTests(MirrorTextControllerTest);
     defineReflectiveTests(CustomPaintFiniteSizeTest);
     defineReflectiveTests(PositionedMustBeOutermostTest);
     defineReflectiveTests(SnackBarActionNotWiredTest);
@@ -98,25 +97,6 @@ class UniformBorderOnlyTest extends RuleTest {
   Future<void> test_quietWhenAllFourSidesAreGiven() => assertClean('''
 final s = BorderSide(width: 1);
 final d = BoxDecoration(border: Border(top: s, right: s, bottom: s, left: s));
-''');
-}
-
-@reflectiveTest
-class MirrorTextControllerTest extends RuleTest {
-  @override
-  void setUp() {
-    rule = MirrorTextController();
-    super.setUp();
-  }
-
-  Future<void> test_reportsControllerWithoutOnChanged() => assertWarning('''
-final c = TextEditingController();
-Widget build() => TextField(controller: c);
-''', 'controller: c');
-
-  Future<void> test_quietWithOnChanged() => assertClean('''
-final c = TextEditingController();
-Widget build() => TextField(controller: c, onChanged: (v) => c.text = v);
 ''');
 }
 
