@@ -17,17 +17,25 @@ import '../dartnative_widgets.dart';
 import 'rule_support.dart';
 
 const _flutterblocUriPrefix = 'package:flutterbloc_kit/';
+const _contextExtensions = {'ReadContext', 'WatchContext', 'SelectContext'};
 
 /// Whether [node] calls one of flutterbloc_kit's BuildContext extension
 /// methods named in [names].
 ///
-/// A resolved call is checked by its library; an unresolved one (the plugin
-/// running before `pub get`, say) by its receiver being DartNative's
-/// `BuildContext`.
+/// A resolved call must come from one of the three extensions in
+/// flutterbloc_kit, so a `select` on some other class in that package (or a
+/// `watch` from DartNative's own `ListenableWatch`) does not match. An
+/// unresolved call (the plugin running before `pub get`, say) is matched by
+/// its receiver being DartNative's `BuildContext`.
 bool _isContextCall(MethodInvocation node, Set<String> names) {
   if (!names.contains(node.methodName.name)) return false;
-  final uri = node.methodName.element?.library?.uri.toString();
-  if (uri != null) return uri.startsWith(_flutterblocUriPrefix);
+  final element = node.methodName.element;
+  if (element != null) {
+    final uri = element.library?.uri.toString() ?? '';
+    final owner = element.enclosingElement?.name;
+    return uri.startsWith(_flutterblocUriPrefix) &&
+        _contextExtensions.contains(owner);
+  }
   return isExactlyDartNativeType(node.realTarget?.staticType, 'BuildContext');
 }
 
@@ -95,6 +103,7 @@ class FlutterblocWatchOutsideBuild extends AnalysisRule {
     RuleVisitorRegistry registry,
     RuleContext context,
   ) {
+    if (context.isInTestDirectory) return;
     registry.addMethodInvocation(this, _WatchVisitor(this));
   }
 }
@@ -138,6 +147,7 @@ class FlutterblocReadStateInBuild extends AnalysisRule {
     RuleVisitorRegistry registry,
     RuleContext context,
   ) {
+    if (context.isInTestDirectory) return;
     registry.addMethodInvocation(this, _ReadStateVisitor(this));
   }
 }
@@ -187,6 +197,7 @@ class FlutterblocReadInBuild extends AnalysisRule {
     RuleVisitorRegistry registry,
     RuleContext context,
   ) {
+    if (context.isInTestDirectory) return;
     registry.addMethodInvocation(this, _ReadVisitor(this));
   }
 }

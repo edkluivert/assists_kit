@@ -32,6 +32,13 @@ extension SelectContext on BuildContext {
   R select<T, R>(R Function(T value) selector) => throw UnimplementedError();
 }
 
+/// Another `select` / `watch` in the package, which the rules must ignore.
+class StreamWatch {
+  R select<R>(Object? Function(Object? state) selector, Object? state) =>
+      throw UnimplementedError();
+  void watch(BuildContext context) {}
+}
+
 typedef BlocWidgetBuilder<S> = Widget Function(BuildContext context, S state);
 
 class BlocBuilder<B extends BlocBase<S>, S> extends Widget {

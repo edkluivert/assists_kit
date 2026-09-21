@@ -1,3 +1,12 @@
+## 0.1.7
+
+- The flutterbloc rules match only calls on flutterbloc_kit's `ReadContext`,
+  `WatchContext` and `SelectContext` extensions. 0.1.6 matched any `watch` or
+  `select` declared in that package, so flutterbloc_kit's own `StreamWatch`
+  and DartNative's `Listenable.watch` were flagged.
+- The flutterbloc rules skip `test/` directories, where a `watch` on a fake
+  context is the point of the test.
+
 ## 0.1.6
 
 - Rules for [flutterbloc_kit](https://dartpub.dev/packages/flutterbloc_kit):

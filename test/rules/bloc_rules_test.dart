@@ -107,6 +107,14 @@ class Page extends StatelessWidget {
 }
 ''');
 
+  Future<void> test_quietForOtherSelectAndWatchInThePackage() =>
+      assertBlocClean('''
+void helper(BuildContext context) {
+  final w = StreamWatch()..watch(context);
+  w.select<bool>((s) => true, null);
+}
+''');
+
   Future<void> test_quietForReadInAHandler() => assertBlocClean('''
 class Page extends StatelessWidget {
   const Page({super.key});
