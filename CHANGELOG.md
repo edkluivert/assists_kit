@@ -1,4 +1,4 @@
-## 0.1.7
+## 0.1.8
 
 - The flutterbloc rules match only calls on flutterbloc_kit's `ReadContext`,
   `WatchContext` and `SelectContext` extensions. 0.1.6 matched any `watch` or

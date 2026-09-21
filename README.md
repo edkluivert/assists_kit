@@ -27,7 +27,7 @@ your project:
 plugins:
   assists_kit:
     hosted: https://dartpub.dev
-    version: ^0.1.5
+    version: ^0.1.8
 ```
 
 Restart the Dart Analysis Server once (Android Studio: Tools › Dart › Restart
